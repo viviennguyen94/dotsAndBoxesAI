@@ -1,0 +1,72 @@
+
+struct Graph
+{
+    2D array h
+    2D array v
+    2D array 
+}
+
+
+Node {
+    graph
+    utility
+    vector of children h
+    vector children v
+}
+
+minimaxWrapper(Graph g){
+
+    node root = new node(g);
+
+	for each child of root{
+		child.utility = minimaxRec(root, TRUE)
+	}
+
+	return child with best utility  
+}
+
+minimaxRec(node currState, bool isMax){
+
+	if terminal node reached{
+		store total num of boxes in state
+		return heuristicValue * #boxes for max - #boxes for min *
+	}
+	
+	if maximizing player {
+
+		bestValue = -inf
+
+		for each child in currState{
+			//player goes again
+			if child added a new box {
+				temp = minimax(child, TRUE)
+			}
+			//player doesnt go again
+			else {
+				temp = minimax(child, FALSE)
+			}
+			bestValue = max(bestValue, temp)
+		}	
+	}
+	
+
+	else *minimizing player* {
+		
+		bestValue = +inf
+
+		for each child in currState{
+			//player goes again
+			if child added a new box {
+				temp = minimax(child, FALSE)
+			}
+			//player doesnt go again
+			else {
+				temp = minimax(child, TRUE)
+			}
+			bestValue = min(bestValue, temp)
+		}
+	}
+
+	return bestValue
+}
+
