@@ -43,7 +43,7 @@ int main()
    cout << "Player 2: Enter the initial letter of your first name: ";
    cin >> player2;
 
-   // // start with player 1
+   // start with player 1
    n.player = player1;
 
    do {
@@ -54,11 +54,14 @@ int main()
          cout << "Enter an edge to add according to map above: ";
          cin >> move;
 
-         addMove(move, &n); // pass struct by reference
+         if (!addMove(move, &n)) {
+            continue;
+         }
          // check for boxes and toggle player if no boxes made
          if (!checkNewBoxes(move, &n.nodeGraph, &n, player1)) {
             n.player = player2;
          }
+
          printGraph(n.nodeGraph);
          cout << endl;
          
@@ -69,7 +72,9 @@ int main()
          cout << "Enter an edge to add according to map above: ";
          cin >> move;
 
-         addMove(move, &n); // pass struct by reference
+         if (!addMove(move, &n)) {
+            continue;
+         }
          // check for boxes
          if (!checkNewBoxes(move, &n.nodeGraph, &n, player2)) {
             n.player = player1;
