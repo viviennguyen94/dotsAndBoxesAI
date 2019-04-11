@@ -38,10 +38,12 @@ int main()
    // Ask player 1 to enter their initial of their first name
    cout << "Player 1: Enter the initial letter of your first name: ";
    cin >> player1;
+   n.p1 = player1;
 
    // Ask player 2 to enter their initial of their first name
    cout << "Player 2: Enter the initial letter of your first name: ";
    cin >> player2;
+   n.p2 = player2;
 
    // start with player 1
    n.player = player1;
@@ -54,6 +56,7 @@ int main()
          cout << "Enter an edge to add according to map above: ";
          cin >> move;
 
+         // adds move only if move does not exist
          if (!addMove(move, &n)) {
             continue;
          }
@@ -72,6 +75,7 @@ int main()
          cout << "Enter an edge to add according to map above: ";
          cin >> move;
 
+         // adds move only if move does not exist
          if (!addMove(move, &n)) {
             continue;
          }
@@ -84,7 +88,20 @@ int main()
       }
       
       
-   } while (move != "exit");
+   } while (!checkWinner(&n));
 
-   cout << "done?" << endl;
+   if (n.winner == '1') {
+      cout << "The winner is player 1 / \'" << n.p1 << "\' " 
+      << "with " << n.p1Count << " points" << endl;
+      cout << "The loser is player 2 / \'" << n.p2 << "\' " 
+      << "with " << n.p2Count << " points" << endl;
+   } else if (n.winner == '2') {
+      cout << "The winner is player 2 / \'" << n.p2 << "\' " 
+      << "with " << n.p2Count << " points" << endl;
+      cout << "The loser is player 1 / \'" << n.p1 << "\' " 
+      << "with " << n.p1Count << " points" << endl;
+   } else {
+      // a tie never happens on a 3 by 3 game
+      cout << "It is a tie." << endl;
+   }
 }
