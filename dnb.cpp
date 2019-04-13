@@ -5,6 +5,8 @@ using namespace std;
 
 int main()
 {
+   // to prevent AI from freezing on first input
+   int firstInput = 0;
 
    // print sample graph
    cout<<"."<<"_"<<"h1"<<"_"<<"."<<"_"<<"h2"<<"_"<<"."<<"_"<<"h3"<<"_"<<".\n";
@@ -36,14 +38,17 @@ int main()
    char player1, player2;
 
    // Ask player 1 to enter their initial of their first name
-   cout << "Player 1: Enter the initial letter of your first name: ";
+   cout << "Player 1 (human): Enter the initial letter of your first name: ";
    cin >> player1;
    n.p1 = player1;
 
-   // Ask player 2 to enter their initial of their first name
-   cout << "Player 2: Enter the initial letter of your first name: ";
-   cin >> player2;
-   n.p2 = player2;
+   // // Ask player 2 to enter their initial of their first name
+   // cout << "Player 2: Enter the initial letter of your first name: ";
+   // cin >> player2;
+   
+   // AI (* for character)
+   player2 = '*';
+   n.p2 = '*';
 
    // start with player 1
    n.player = player1;
@@ -52,7 +57,7 @@ int main()
 
       // Player 1
       if (n.player == player1) {
-         cout << "Player 1: \'" << player1 << "\'\n"; 
+         cout << "Player 1 (human): \'" << player1 << "\'\n"; 
          cout << "Enter an edge to add according to map above: ";
          cin >> move;
 
@@ -71,20 +76,50 @@ int main()
 
          // Player 2
       } else if (n.player == player2) {
-         cout << "Player 2: \'" << player2 << "\'\n"; 
-         cout << "Enter an edge to add according to map above: ";
-         cin >> move;
+         // cout << "Player 2 (AI): \'" << player2 << "\'\n"; 
+         // cout << "Enter an edge to add according to map above: ";
+         // cin >> move;
 
-         // adds move only if move does not exist
-         if (!addMove(move, &n)) {
-            continue;
-         }
-         // check for boxes
-         if (!checkNewBoxes(move, &n.nodeGraph, &n, player2)) {
-            n.player = player1;
-         }
-         printGraph(n.nodeGraph);
-         cout << endl;
+         // // adds move only if move does not exist
+         // if (!addMove(move, &n)) {
+         //    continue;
+         // }
+         // // check for boxes
+         // if (!checkNewBoxes(move, &n.nodeGraph, &n, player2)) {
+         //    n.player = player1;
+         // }
+         // printGraph(n.nodeGraph);
+         // cout << endl;
+
+         cout << "Player 2 (AI) : * entered: " << endl;
+         // // do first input to prevent infinite loop
+         // if (firstInput == 0) {
+         //    addMove("h2", &n);
+         //    firstInput++;
+         //    printGraph(n.nodeGraph);
+         //    n.player = player1;
+         // }
+
+         // else {
+            minimaxWrapper(&n, &n.nodeGraph);
+            cout << "player 2 graph" << endl;
+            printGraph(n.nodeGraph);
+            move = n.nodeGraph.bestMove;
+            cout << "move2: " << move << endl;
+            // adds move only if move does not exist
+            if (!addMove(move, &n)) {
+               continue;
+            }
+            // check for boxes and toggle player if no boxes made
+            if (!checkNewBoxes(move, &n.nodeGraph, &n, player1)) {
+               n.player = player1;
+            }
+            cout << move << endl;
+            // cout << "Player 2 (AI) : * entered: " << n.nodeGraph.bestMove;
+            printGraph(n.nodeGraph);
+            cout << endl;
+         // }
+         
       }
       
       
