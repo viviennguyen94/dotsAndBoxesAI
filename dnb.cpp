@@ -1,142 +1,178 @@
 #include "util.h"
-#include <string.h>
+#include <cstdlib>
+#include <ctime>    // Enables use of time() function
 
 using namespace std;
 
+void recurse(struct Node *n)
+{
+    for (auto *child : n->children)
+    {
+        printGraph(child);
+        cout << "\n";
+        recurse(child);
+    }
+}
+
 int main()
 {
-   // to prevent AI from freezing on first input
-   int firstInput = 0;
+    srand(time(0));  // Unique seed for random AI part
 
-   // print sample graph
-   cout<<"."<<"_"<<"h1"<<"_"<<"."<<"_"<<"h2"<<"_"<<"."<<"_"<<"h3"<<"_"<<".\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"v1"<<"   "<<"v2"<<"   "<<"v3"<<"   "<<"v4"<<"\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"."<<"_"<<"h4"<<"_"<<"."<<"_"<<"h5"<<"_"<<"."<<"_"<<"h6"<<"_"<<".\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"v5"<<"   "<<"v6"<<"   "<<"v7"<<"   "<<"v8"<<"\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"."<<"_"<<"h7"<<"_"<<"."<<"_"<<"h8"<<"_"<<"."<<"_"<<"h9"<<"_"<<".\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"v9"<<"   "<<"v10"<<"  "<<"v11"<<"  "<<"v12"<<"\n";
-   cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
-   cout<<"."<<""<<"h10"<<"_"<<"."<<""<<"h11"<<"_"<<"."<<""<<"h12"<<"_"<<".\n";
-   cout << endl;
+    Node n;
+    n.player = 'P';
 
-   struct Node n;
+    string randomArray[24] = {"h0","h1","h2","h3","h4","h5","h6","h7","h8","h9","h10","h11",
+                                "v0","v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11"};
 
-   // n.nodeGraph.h[2][0] = lineH;
+    // map options
+    cout<<"."<<"_"<<"h0"<<"_"<<"."<<"_"<<"h1"<<"_"<<"."<<"_"<<"h2"<<"_"<<".\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"v0"<<"   "<<"v1"<<"   "<<"v2"<<"   "<<"v3"<<"\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"."<<"_"<<"h3"<<"_"<<"."<<"_"<<"h4"<<"_"<<"."<<"_"<<"h5"<<"_"<<".\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"v4"<<"   "<<"v5"<<"   "<<"v6"<<"   "<<"v7"<<"\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"."<<"_"<<"h6"<<"_"<<"."<<"_"<<"h7"<<"_"<<"."<<"_"<<"h8"<<"_"<<".\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"v8"<<"   "<<"v9"<<"  "<<"v10"<<"  "<<"v11"<<"\n";
+    cout<<"|"<<"    "<<"|"<<"    "<<"|"<<"    "<<"|"<<"\n";
+    cout<<"."<<"_"<<"h9"<<"_"<<"."<<""<<"h10"<<"_"<<"."<<""<<"h11"<<"_"<<".\n";
+    cout << endl;
 
-   // n.nodeGraph.v[1][3] = lineV;
+    //    n.nodeGraph.h[2] = n.nodeGraph.h[3] = n.nodeGraph.h[4] = n.nodeGraph.h[5] = n.nodeGraph.h[11] = lineH;
+    //    n.nodeGraph.v[0] = n.nodeGraph.v[1] = n.nodeGraph.v[6] = n.nodeGraph.v[7] = lineV;
 
-   // n.nodeGraph.box[1][1] = 'C';
-   // n.nodeGraph.box[0][0] = 'C';
-   // n.nodeGraph.box[0][2] = 'P';
+    //    n.nodeGraph.v[2] = n.nodeGraph.v[4] = n.nodeGraph.v[11] = n.nodeGraph.v[9] = lineV;
+    //    n.nodeGraph.h[8] = lineH;
 
-   string move;
-   char player1, player2;
+    // start random first several moves (14 in total) to avoid program break (with 10 moves left)
 
-   // Ask player 1 to enter their initial of their first name
-   cout << "Player 1 (human): Enter the initial letter of your first name: ";
-   cin >> player1;
-   n.p1 = player1;
-
-   // // Ask player 2 to enter their initial of their first name
-   // cout << "Player 2: Enter the initial letter of your first name: ";
-   // cin >> player2;
-   
-   // AI (* for character)
-   player2 = '*';
-   n.p2 = '*';
-
-   // start with player 1
-   n.player = player1;
-
-   do {
-
-      // Player 1
-      if (n.player == player1) {
-         cout << "Player 1 (human): \'" << player1 << "\'\n"; 
-         cout << "Enter an edge to add according to map above: ";
-         cin >> move;
-
-         // adds move only if move does not exist
-         if (!addMove(move, &n)) {
-            continue;
-         }
-         // check for boxes and toggle player if no boxes made
-         if (!checkNewBoxes(move, &n.nodeGraph, &n, player1)) {
-            n.player = player2;
-         }
-
-         printGraph(n.nodeGraph);
-         cout << endl;
-         
-
-         // Player 2
-      } else if (n.player == player2) {
-         // cout << "Player 2 (AI): \'" << player2 << "\'\n"; 
-         // cout << "Enter an edge to add according to map above: ";
-         // cin >> move;
-
-         // // adds move only if move does not exist
-         // if (!addMove(move, &n)) {
-         //    continue;
-         // }
-         // // check for boxes
-         // if (!checkNewBoxes(move, &n.nodeGraph, &n, player2)) {
-         //    n.player = player1;
-         // }
-         // printGraph(n.nodeGraph);
-         // cout << endl;
-
-         cout << "Player 2 (AI) : * entered: " << endl;
-         // // do first input to prevent infinite loop
-         // if (firstInput == 0) {
-         //    addMove("h2", &n);
-         //    firstInput++;
-         //    printGraph(n.nodeGraph);
-         //    n.player = player1;
-         // }
-
-         // else {
-            minimaxWrapper(&n, &n.nodeGraph);
-            cout << "player 2 graph" << endl;
-            printGraph(n.nodeGraph);
-            move = n.nodeGraph.bestMove;
-            cout << "move2: " << move << endl;
+    int moves = 0;
+    Node *cursor = &n;
+    while (moves <= 14) {
+        if (n.player == 'P') {
+            string input;
+            cout << "Person, please enter a line: ";
+            cin >> input;
+            
             // adds move only if move does not exist
-            if (!addMove(move, &n)) {
-               continue;
+            if (!addMoveFirst(input, &n)) {
+                continue;
             }
             // check for boxes and toggle player if no boxes made
-            if (!checkNewBoxes(move, &n.nodeGraph, &n, player1)) {
-               n.player = player1;
+            if (!checkNewBoxes(&n.nodeGraph, 'P')) {
+                n.player = 'C';
             }
-            cout << move << endl;
-            // cout << "Player 2 (AI) : * entered: " << n.nodeGraph.bestMove;
-            printGraph(n.nodeGraph);
-            cout << endl;
-         // }
-         
-      }
-      
-      
-   } while (!checkWinner(&n));
+            
+            printGraph(&n);
+        } 
+        else {
+            string randomInput = AIPotentialWins(&n, &n.nodeGraph, 'C');
+            // check for potential wins for AI and make move to make box(es)
+            if (randomInput != "noWins") { // if anything besides "noWins"
+                cout << "AI GOT BOX with: " << randomInput << endl;
+                moves++;
+                checkNewBoxes(&n.nodeGraph, 'C');
+                printGraph(&n);
+                continue;
+            }
+            
+            else {
+                // random variables
+                int randomPos = rand() % 24;
+                randomInput = randomArray[randomPos];
+                // adds move only if move does not exist and avoids 
+                if (!addMoveFirst(randomInput, &n)) {
+                    continue;
+                }
+            }
+            // if (!avoidBox(randomInput, &n.nodeGraph, 'C')) {
+            //     printGraph(&n);
+            //     removeEdgeFirst(randomInput, &n);
+            //     printGraph(&n);
+            //     continue;
+            // }
+            // check for boxes and toggle player if no boxes made
+            if (!checkNewBoxes(&n.nodeGraph, 'C')) {
+                n.player = 'P';
+            }
+            cout << "AI ENTERED: " << randomInput << endl;
+            printGraph(&n);
+        }
+        moves++;
+    }
 
-   if (n.winner == '1') {
-      cout << "The winner is player 1 / \'" << n.p1 << "\' " 
-      << "with " << n.p1Count << " points" << endl;
-      cout << "The loser is player 2 / \'" << n.p2 << "\' " 
-      << "with " << n.p2Count << " points" << endl;
-   } else if (n.winner == '2') {
-      cout << "The winner is player 2 / \'" << n.p2 << "\' " 
-      << "with " << n.p2Count << " points" << endl;
-      cout << "The loser is player 1 / \'" << n.p1 << "\' " 
-      << "with " << n.p1Count << " points" << endl;
-   } else {
-      // a tie never happens on a 3 by 3 game
-      cout << "It is a tie." << endl;
-   }
+
+    generateChildNodes(&n);
+    n.utility = setUtil(&n);
+    // printGraph(&n);
+
+    while (!isLeaf(cursor))
+    {
+        if (cursor->player == 'P')
+        {
+            struct Graph temp;
+            assignGraph(temp, cursor->nodeGraph);
+            string input, modify;
+            cout << "Person, please enter a line: ";
+            cin >> input;
+            modify = input;
+            modify.erase(0,1);
+
+            if (input.size() == 2)
+            {
+                if (input.at(0) == 'v') temp.v[stoi(modify)] = lineV;
+                else temp.h[stoi(modify)] = lineH;
+            }
+
+            else
+            {
+                if (input.at(0) == 'v') temp.v[stoi(modify)] = lineV;
+                else temp.h[stoi(modify)] = lineH;
+            }
+
+            for (auto x : cursor->children)
+                if (compareGraph(x->nodeGraph,temp))
+                        cursor = x;
+        }
+
+        else
+        {
+            cout << "AI entered: " << endl;
+            struct Node *tmp = new Node;
+            for (auto *child : cursor->children)
+            {
+                if (child->utility > tmp->utility) tmp = child;
+            }
+
+            cursor = tmp;
+        }
+
+        printGraph(cursor);
+    }
+
+
+    cout << "game ended..\n\nfinal graph:\n";
+    printGraph(cursor);
+
+    // tally total points and output winner
+    for (int i = 0; i < 9; i++)
+        if (cursor->nodeGraph.box[i] == 'C')
+        {
+            cursor->nodeGraph.totalC++;
+        } else if (cursor->nodeGraph.box[i] == 'P') {
+            cursor->nodeGraph.totalP++;
+        }
+
+    char winner;
+    if (cursor->nodeGraph.totalP > cursor->nodeGraph.totalC) {
+        winner = 'P';
+    } else {
+        winner = 'C';
+    }
+    cout << "Winner is " << winner << endl;
+    cout << "Total points P: " << cursor->nodeGraph.totalP << endl;
+    cout << "Total points C: " << cursor->nodeGraph.totalC << endl;
 }
+
